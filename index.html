@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Socket test client</title>
+
+    <style>
+        .pseudoCanvas {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            border: 1px solid red;
+        }
+
+        .pseudoCanvas i {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: blue;
+        }
+    </style>
+</head>
+<body>
+
+<div class="pseudoCanvas"></div>
+
+<script src="node_modules/socket.io-client/socket.io.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+    var pseudoCanvas = $(".pseudoCanvas");
+
+    var player;
+    var playerX = 0;
+    var playerY = 0;
+
+    var socket = io.connect('http://localhost:9876/');
+
+    socket.on("onconnected", function(data) {
+        console.log("connected", data);
+
+        player = $("<i></i>");
+
+        pseudoCanvas.append(player);
+    });
+
+    socket.on("playerConnected", function (data) {
+        console.log("player connected", data.id);
+
+        pseudoCanvas.append("<i data-id='" + data.id + "'></i>");
+    });
+
+    socket.on("playerMove", function (data) {
+        console.log("move", data);
+        pseudoCanvas.find("[data-id=" + data.id + "]").css({
+            left: data.x,
+            top: data.y
+        });
+    });
+
+    $(document).on("keydown", function(event) {
+        switch (event.keyCode) {
+            case 37:
+                // left
+                playerX--;
+                break;
+            case 38:
+                // up
+                playerY--;
+                break;
+            case 39:
+                // right
+                playerX++;
+                break;
+            case 40:
+                // down
+                playerY++;
+                break;
+        }
+
+        socket.emit("message", JSON.stringify({ type: "playerMove", x: playerX, y: playerY }));
+
+    });
+</script>
+
+</body>
+</html>

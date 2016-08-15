@@ -2,6 +2,7 @@ import * as uuid from "node-uuid";
 import {Player} from "./Player";
 import {Logger} from "../core/logger/Logger";
 import {OPCODE} from "./OPCode";
+import {ImplementException} from "../core/exception/ImplementException";
 
 /**
  * WorldServer
@@ -55,6 +56,15 @@ export class WorldServer {
                 player.move(parsed.x, parsed.y);
                 break;
         }
+    }
+
+    /**
+     * WorldServer update
+     *
+     * TODO: bude tikat při 20Hz
+     */
+    private update(): void {
+        throw new ImplementException();
     }
 
     /**

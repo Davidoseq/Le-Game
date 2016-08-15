@@ -37,16 +37,16 @@
 
     socket.on("onconnected", function(data) {
         console.log("connected", data);
-
-        player = $("<i></i>");
-
-        pseudoCanvas.append(player);
     });
 
     socket.on("playerConnected", function (data) {
         console.log("player connected", data.id);
 
-        pseudoCanvas.append("<i data-id='" + data.id + "'></i>");
+        pseudoCanvas.empty();
+
+        data.players.forEach(function (id) {
+            pseudoCanvas.append("<i data-id='" + id + "'></i>");
+        });
     });
 
     socket.on("playerMove", function (data) {

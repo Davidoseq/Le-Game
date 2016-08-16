@@ -32,11 +32,15 @@
     var player;
     var playerX = 0;
     var playerY = 0;
+    var playerUUID = 0;
 
     var socket = io.connect('http://localhost:9876/');
 
     socket.on("onconnected", function(data) {
         console.log("connected", data);
+        playerUUID = data.id;
+        player = $("<i data-id='" + data.id + "'></i>");
+        pseudoCanvas.append(player);
     });
 
     socket.on("playerConnected", function (data) {
@@ -78,6 +82,7 @@
         }
 
         socket.emit("message", JSON.stringify({ type: "playerMove", x: playerX, y: playerY }));
+        player.css({left:playerX, top:playerY});
 
     });
 </script>

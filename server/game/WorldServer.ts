@@ -28,7 +28,9 @@ export class WorldServer {
 
         Logger.log("World: client connected", player.getUUID());
 
+        //TODO potreba dodelat player on connected a vratit stav hry
         this.socketServer.emit(OPCODE.PLAYER_CONNECTED, { id: player.getUUID(), players: this.players.map((player) => player.getUUID()) });
+        client.emit("onconnected", {id: player.getUUID()});
 
         client.on("message", (m) => this.onMessage(player, m));
 
